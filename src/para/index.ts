@@ -1,0 +1,1 @@
+export { Para as default } from './Para';

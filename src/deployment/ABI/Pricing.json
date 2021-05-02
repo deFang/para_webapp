@@ -1,0 +1,596 @@
+{
+  "Pricing": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "midPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "blockNumber",
+          "type": "uint256"
+        }
+      ],
+      "name": "ReserveSnapshotted",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "reserveSnapshots",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "midPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "blockNumber",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "accountAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "adminAddress",
+          "type": "address"
+        }
+      ],
+      "name": "init",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getExpectedTarget",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum Types.Side",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Types.Side",
+          "name": "side",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "quoteBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "deltaB",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_K_",
+          "type": "uint256"
+        }
+      ],
+      "name": "getExpectedTargetExt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum Types.Side",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "getMidPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "midPrice",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "snapshotIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getSpecificSnapshot",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "midPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "blockNumber",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Pricing.ReserveSnapshot",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "getReserveSnapshotLength",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "addReserveSnapshot",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTwapPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Types.Side",
+          "name": "accountSide",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "entryValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "closeValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "entrySloss",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "clossSloss",
+          "type": "uint256"
+        }
+      ],
+      "name": "queryPNLwiValue",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Types.Side",
+          "name": "accountSide",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "accountSize",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "accountEntryValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "accountEntrySloss",
+          "type": "uint256"
+        }
+      ],
+      "name": "queryPNL",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Types.Side",
+          "name": "side",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "closePositionValue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "closeValue",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Types.Side",
+          "name": "accountSide",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "accountSize",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "accountEntryValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "accountEntrySloss",
+          "type": "uint256"
+        }
+      ],
+      "name": "queryPNLMarkPrice",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "querySellBaseToken",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "receiveQuote",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "queryBuyBaseToken",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "payQuote",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "sellBaseAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "_querySellBaseToken",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "receiveQuote",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lpFeeQuote",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "mtFeeQuote",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "baseTarget",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "baseBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "quoteTarget",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "quoteBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum Types.Side",
+          "name": "newSide",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "buyBaseAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "_queryBuyBaseToken",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "payQuote",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lpFeeQuote",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "mtFeeQuote",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "baseTarget",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "baseBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "quoteTarget",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "quoteBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum Types.Side",
+          "name": "newSide",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_calculatePoolEquity",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "equityBalance",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_poolNetPositionRatio",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "ENP",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_canPoolOpen",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_canPoolKeep",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    }
+  ]
+}

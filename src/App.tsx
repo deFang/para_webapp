@@ -1,26 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import ThemeProvider from './theme'
+import MainProvider from './views/MainProvider'
+import LayoutView from "./layout";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+
+
+
+const App: React.FC = () => {
+    return (
+        <ThemeProvider>
+          <MainProvider>
+            <LayoutView/>
+          </MainProvider>
+        </ThemeProvider>
+    );
+};
+//
+// const Providers: React.FC = ({ children }) => {
+//   return (
+//     <ThemeProvider theme={theme}>
+//       <UseWalletProvider chainId={config.chainId}>
+//         <Provider store={store}>
+//           <Updaters />
+//           <ChainlinkProvider>
+//                 <>
+//                   <Popups />
+//                   {children}
+//                 </>
+//           </ChainlinkProvider>
+//         </Provider>
+//       </UseWalletProvider>
+//     </ThemeProvider>
+//   );
+// };
 
 export default App;
