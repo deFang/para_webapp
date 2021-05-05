@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
-import { BigNumber } from 'ethers';
+import {BigNumber} from 'ethers';
 import usePara from './usePara';
 import config from '../config';
 

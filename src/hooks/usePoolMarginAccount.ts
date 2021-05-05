@@ -3,6 +3,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {BigNumber} from 'ethers';
 import usePara from './usePara';
 import config from '../config';
+import {BN2display} from "../utils/Converter";
 
 interface MarginAccountProps {
   SIDE: number;

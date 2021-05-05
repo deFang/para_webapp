@@ -1,10 +1,8 @@
-import React, {useContext, useState} from 'react'
-import styled, {ThemeContext} from 'styled-components'
+import React from 'react'
+import styled from 'styled-components'
 import {AutoColumn} from '../../Column'
-import useMarginAccount from "../../../../hooks/useMarginAccount";
 import Spacer from "../../../Spacer";
 import UserAccountInfo from "../../../../para/component/UserAccountInfo";
-import {Text} from "rebass";
 
 
 const StyledModalTitle = styled.div`
@@ -14,18 +12,26 @@ const StyledModalTitle = styled.div`
   font-weight: 500;
 `;
 
+interface MarketCloseProps {
+  showMarketClose?: boolean;
+  handleMarketClose?: () => void;
+}
 
-export default function UserInfoBulletin() {
-  const theme = useContext(ThemeContext)
-  const [showInverted, setShowInverted] = useState<boolean>(false)
-  const marginAccount = useMarginAccount()
+
+const UserInfoBulletin: React.FC<MarketCloseProps> = (
+  {
+    showMarketClose = false,
+    handleMarketClose
+  }) => {
   return (
     <AutoColumn gap="0px">
       <StyledModalTitle>
         {'User Balance'}
       </StyledModalTitle>
       <Spacer size="md"/>
-      <UserAccountInfo />
+      <UserAccountInfo showMarketClose={showMarketClose} handleMarketClose={handleMarketClose}/>
     </AutoColumn>
   )
 }
+
+export default UserInfoBulletin;

@@ -9,9 +9,10 @@ import CurrencyLogo from "../../uniswap/CurrencyLogo";
 import Spacer from "../../Spacer";
 import {BigNumber} from "ethers";
 import usePara from "../../../hooks/usePara";
-import {BN2display, decimal2BN, decimalDiv, decimalMul} from "../../../utils/Converter";
+import {BN2decimal, BN2display, decimal2BN, decimalDiv, decimalMul} from "../../../utils/Converter";
 import config from "../../../config";
-import {Side, MarginAccount} from "../../../utils/Types";
+import {Side, MarginAccount, getLiquidationPrice} from "../../../utils/Types";
+import useMarginAccount from "../../../hooks/useMarginAccount";
 
 interface ConfirmProps {
   onDismiss?: () => void;
@@ -31,6 +32,7 @@ const ConfirmModal: React.FC<ConfirmProps> = (
   }) => {
   const theme = useContext(ThemeContext)
   const para = usePara()
+  const marginAccount = useMarginAccount()
   const onConfirmCallback = useCallback(()=>{
     onConfirm();
     onDismiss();
@@ -44,10 +46,15 @@ const ConfirmModal: React.FC<ConfirmProps> = (
   const [leverageBefore, setLeverageBefore] = useState("-")
   const [leverageAfter, setLeverageAfter] = useState("-")
 
+  const [LPFeeRateBN, setLPFeeRateBN] = useState<BigNumber>(BigNumber.from(0))
+  const [MTFeeRateBN, setMTFeeRateBN] = useState<BigNumber>(BigNumber.from(0))
+
   const [LPFee, setLPFee] = useState("-")
   const [MTFee, setMTFee] = useState("-")
   const [fee, setFee] = useState("-")
   const side: Side = isBuy? Side.LONG : Side.SHORT
+
+  const [maintenanceMarginRateBN, setMaintenanceMarginRateBN] = useState<BigNumber>()
 
 
   useEffect(() => {
@@ -85,12 +92,18 @@ const ConfirmModal: React.FC<ConfirmProps> = (
       setLeverageAfter(BN2display(leverageAfterBN))
 
       // FEE
-      const LPFeeBN = decimalMul(quoteAmountBN, await para.getLPFeeRate())
-      const MTFeeBN = decimalMul(quoteAmountBN, await para.getMTFeeRate())
+      const LPFeeRateBN = await para.getLPFeeRate()
+      const MTFeeRateBN = await para.getMTFeeRate()
+      const LPFeeBN = decimalMul(quoteAmountBN, LPFeeRateBN)
+      const MTFeeBN = decimalMul(quoteAmountBN, MTFeeRateBN)
       const FeeBN = LPFeeBN.add(MTFeeBN)
+      setLPFeeRateBN(LPFeeRateBN)
+      setMTFeeRateBN(MTFeeRateBN)
       setLPFee(BN2display(LPFeeBN))
       setMTFee(BN2display(MTFeeBN))
       setFee(BN2display(FeeBN))
+
+      setMaintenanceMarginRateBN(await para.getMaintenanceMarginRate())
     },
     [contractSize, isBuy]
   );
@@ -127,8 +140,8 @@ const ConfirmModal: React.FC<ConfirmProps> = (
             </PositionText>
           </RowFixed>
           <RowFixed>
-            <PositionText fontSize={14} fontWeight={400} color={theme.color.green1}>
-              {`${contractSize}(${sizeBefore}->${sizeAfter})`}
+            <PositionText fontSize={14} fontWeight={400} color={theme.color.white}>
+              {`${contractSize} (${sizeBefore}->${sizeAfter})`}
             </PositionText>
           </RowFixed>
         </RowBetween>
@@ -140,8 +153,8 @@ const ConfirmModal: React.FC<ConfirmProps> = (
             </PositionText>
           </RowFixed>
           <RowFixed>
-            <PositionText fontSize={14} fontWeight={400} color={theme.color.green1}>
-              {quoteAmount}
+            <PositionText fontSize={14} fontWeight={400} color={theme.color.white}>
+              {quoteAmount} BUSD
             </PositionText>
           </RowFixed>
         </RowBetween>
@@ -151,11 +164,12 @@ const ConfirmModal: React.FC<ConfirmProps> = (
             <PositionText fontSize={14} fontWeight={400} color={theme.color.text2}>
               {'Leverage'}
             </PositionText>
+            <QuestionHelper text="The Maximum Allowed Leverage is 10x"/>
           </RowFixed>
           <RowFixed>
             <RowFixed>
               <PositionText fontSize={14} fontWeight={400} color={theme.color.white}>
-                {`${leverageBefore}->${leverageAfter}`}
+                {`${leverageBefore} x->${leverageAfter} x`}
               </PositionText>
             </RowFixed>
           </RowFixed>
@@ -169,7 +183,7 @@ const ConfirmModal: React.FC<ConfirmProps> = (
           </RowFixed>
           <RowFixed>
             <PositionText fontSize={14} fontWeight={400} color={theme.color.white}>
-              {"62003.23"}
+              {marginAccount && marginAccount.SIDE !== Side.FLAT ? BN2display(getLiquidationPrice(marginAccount, maintenanceMarginRateBN)): "-"}
             </PositionText>
           </RowFixed>
         </RowBetween>
@@ -179,27 +193,27 @@ const ConfirmModal: React.FC<ConfirmProps> = (
             <PositionText fontSize={14} fontWeight={400} color={theme.color.text2}>
               {'Fees'}
             </PositionText>
-            <QuestionHelper text="Fees include 0.3% LP rate and 0.0% MT rate for this pool"/>
+            <QuestionHelper text={`Fees include ${Number(BN2decimal(LPFeeRateBN))*100}% LP rate and ${Number(BN2decimal(MTFeeRateBN))*100}% MT rate for this pool`}/>
           </RowFixed>
           <RowFixed>
             <PositionText fontSize={14} fontWeight={400} color={theme.color.white}>
-              {`${fee}(LP FEE:${LPFee} + MT FEE:${MTFee})`}
+              {`${fee} (LP FEE:${LPFee} + MT FEE:${MTFee}) BUSD`}
             </PositionText>
           </RowFixed>
         </RowBetween>
 
-        <RowBetween>
-          <RowFixed>
-            <PositionText fontSize={14} fontWeight={400} color={theme.color.text2}>
-              {'Slippage Tolerance'}
-            </PositionText>
-          </RowFixed>
-          <RowFixed>
-            <PositionText fontSize={14} fontWeight={400} color={theme.color.white}>
-              {"0.2%"}
-            </PositionText>
-          </RowFixed>
-        </RowBetween>
+        {/*<RowBetween>*/}
+        {/*  <RowFixed>*/}
+        {/*    <PositionText fontSize={14} fontWeight={400} color={theme.color.text2}>*/}
+        {/*      {'Slippage Tolerance'}*/}
+        {/*    </PositionText>*/}
+        {/*  </RowFixed>*/}
+        {/*  <RowFixed>*/}
+        {/*    <PositionText fontSize={14} fontWeight={400} color={theme.color.white}>*/}
+        {/*      {"0.2%"}*/}
+        {/*    </PositionText>*/}
+        {/*  </RowFixed>*/}
+        {/*</RowBetween>*/}
         <Spacer size="md"/>
         <Wrapper>
           <StyledModalAction>

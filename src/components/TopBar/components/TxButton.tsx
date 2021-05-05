@@ -1,15 +1,16 @@
-import React, { useMemo } from 'react';
+import React, {useMemo} from 'react';
 import styled from 'styled-components';
-import { useWallet } from 'use-wallet';
+import {useWallet} from 'use-wallet';
 import Button from '../../Button';
-import { isTransactionRecent, useAllTransactions } from '../../../state/transactions/hooks';
+import {useAllTransactions} from '../../../state/transactions/hooks';
 import useModal from '../../../hooks/useModal';
 import TxModal from './TxModal';
 
-interface TxButtonProps {}
+interface TxButtonProps {
+}
 
 const TxButton: React.FC<TxButtonProps> = () => {
-  const { account } = useWallet();
+  const {account} = useWallet();
   const allTransactions = useAllTransactions();
 
   const pendingTransactions = useMemo(
@@ -18,7 +19,7 @@ const TxButton: React.FC<TxButtonProps> = () => {
   );
 
   const [onPresentTransactionModal, onDismissTransactionModal] = useModal(
-    <TxModal onDismiss={() => onDismissTransactionModal()} />,
+    <TxModal onDismiss={() => onDismissTransactionModal()}/>,
   );
   return (
     <>

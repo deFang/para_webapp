@@ -11,10 +11,11 @@ import BuySellFooter from "./Component/BuySellFooter";
 import usePara from "../../../hooks/usePara";
 import useTestUSDTBalance from "../../../hooks/useTestUSDTBalance";
 import {getDisplayBalance, getBalance} from "../../../utils/formatBalance"
-import {BN2display} from "../../../utils/Converter";
+import {BN2display, decimal2BN} from "../../../utils/Converter";
 import useLpTokenBalance from "../../../hooks/useLpTokenBalance";
 import useLpTokenTotalSupply from "../../../hooks/useLpTokenTotalSupply";
 import {TYPE} from "../../../theme";
+import useHandleTransactionReceipt from "../../../hooks/useHandleTransactionReceipt";
 
 const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
@@ -22,9 +23,18 @@ const CloseIcon = styled(X)<{ onClick: () => void }>`
 const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
 `
+const HalfWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap:10px;
+`
 
 const Wrapper = styled.div`
   width: 100%;
+  display: flex;
+  align-item: space-between;
+  gap: 50px;
   position: relative;
   padding-bottom: 50px;
   max-height: 100%;
@@ -37,6 +47,7 @@ const FooterWrapper = styled.div`
   background-color: ${({theme}) => theme.color.bg3};
   border-radius: 20px;
 `
+
 
 const ToggleWrapper = styled(RowBetween)`
   background-color: ${({theme}) => theme.color.bg3};
@@ -62,6 +73,16 @@ const SubWrapper = styled.div`
   height: 100%
   position: relative;
   padding-bottom: 60px;
+`
+
+const Section = styled(AutoColumn)`
+  padding: 24px;
+`
+
+const BottomSection = styled(Section)`
+  
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 `
 
 
@@ -91,24 +112,39 @@ export default function LiquidityAddRemove(
     },
     [collateralVal]
   )
+
+  const handleTransactionReceipt = useHandleTransactionReceipt();
   const handleAdd = useCallback(
-    async () => {
-      await para?.lpAdd(collateralVal);
-    }, [collateralVal]
-  )
+    () => {
+      handleTransactionReceipt(
+        para.lpAdd(decimal2BN(collateralVal)),
+        `LP Add ${collateralVal} BUSD`,
+      );
+    }, [para, collateralVal]);
 
   const handleRemove = useCallback(
-    async () => {
-      await para?.lpRemove(collateralVal);
-    }, [collateralVal]
-  )
+    () => {
+      handleTransactionReceipt(
+        para.lpRemove(decimal2BN(collateralVal)),
+        `LP Remove ${collateralVal} LP Token`,
+      );
+    }, [para, collateralVal]);
 
-  const handleOnMax = useCallback(
+
+  const handleOnAddMax = useCallback(
     () => {
       const balance = BN2display(testUSDTBalance)
       setCollateralVal(String(balance));
     },
     [testUSDTBalance]
+  )
+
+  const handleOnRemoveMax = useCallback(
+    () => {
+      const balance = BN2display(lpTokenBalance)
+      setCollateralVal(String(balance));
+    },
+    [lpTokenBalance]
   )
 
   return (
@@ -125,7 +161,7 @@ export default function LiquidityAddRemove(
             </RowBetween>
           </PaddedColumn>
           <Separator/>
-          <PaddedColumn style={{paddingBottom: 0}}>
+          <PaddedColumn>
             <ToggleWrapper>
               <ToggleOption onClick={() => setShowLists(!showLists)} active={showLists}>
                 ADD LP
@@ -135,28 +171,39 @@ export default function LiquidityAddRemove(
               </ToggleOption>
             </ToggleWrapper>
           </PaddedColumn>
-
-
+          <Separator/>
           <Column style={{width: '100%', flex: '1 1'}}>
-            <PaddedColumn gap="14px">
-            </PaddedColumn>
-            <Separator/>
             <PaddedColumn gap="lg">
-              <CurrencyInputPanel
+              {showLists
+              ? ( <CurrencyInputPanel
                 value={collateralVal}
                 onUserInput={handleTypeInput}
-                onMax={handleOnMax}
+                onMax={handleOnAddMax}
                 showMaxButton={true}
                 label={'Amount'}
-                headerLabel={`Wallet Balance: ${BN2display(testUSDTBalance)} TestUSDT`}
-                id="buysell-collateral"
-              />
+                headerLabel={`Wallet Balance: ${BN2display(testUSDTBalance)} BUSD`}
+                id="addlp"
+                showCurrency={true}
+                currencyName={'BUSD'}
+              />)
+              : ( <CurrencyInputPanel
+                value={collateralVal}
+                onUserInput={handleTypeInput}
+                onMax={handleOnRemoveMax}
+                showMaxButton={true}
+                label={'Amount'}
+                headerLabel={`Wallet Balance: ${BN2display(testUSDTBalance)} BUSD`}
+                id="removelp"
+                showCurrency={true}
+                currencyName={'BUSD-BTC'}
+              />)
+            }
+              <RowFixed>
+                <TYPE.black fontSize={14} fontWeight={500} color={"#C3C5CB"}>
+                  {`LP Balance: ${BN2display(lpTokenBalance)}`}
+                </TYPE.black>
+              </RowFixed>
             </PaddedColumn>
-            <RowFixed>
-              <TYPE.black fontSize={14} fontWeight={500} color={"#C3C5CB"}>
-                {`lp token balance: ${BN2display(lpTokenBalance)} total supply ${BN2display(lpTokenTotalSupply)}`}
-              </TYPE.black>
-            </RowFixed>
           </Column>
           <SubWrapper>
             {showLists

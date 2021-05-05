@@ -1,14 +1,9 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import styled from 'styled-components';
-import { useWallet } from 'use-wallet';
+import {useWallet} from 'use-wallet';
 import Button from '../../Button';
-import { isTransactionRecent, useAllTransactions } from '../../../state/transactions/hooks';
-import useModal from '../../../hooks/useModal';
-import TxModal from './TxModal';
-import usePoolMarginAccount from "../../../hooks/usePoolMarginAccount";
 import usePara from "../../../hooks/usePara";
 import useHandleTransactionReceipt from "../../../hooks/useHandleTransactionReceipt";
-import {decimal2BN} from "../../../utils/Converter";
 
 interface TxButtonProps {}
 

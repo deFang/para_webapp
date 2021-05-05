@@ -1,6 +1,6 @@
-import {BigNumber} from "ethers";
-import {constants} from "ethers";
-import {decimal2BN} from "./Converter";
+import {BigNumber, constants} from "ethers";
+import {decimal2BN, decimalDiv, decimalMul, ONE} from "./Converter";
+
 export enum Side {FLAT, SHORT, LONG}
 
 export enum RStatus {ONE, ABOVE_ONE, BELOW_ONE}
@@ -32,11 +32,16 @@ export const getSideText = (side: Side) => {
 export const getLiquidationPrice = (marginAccount: MarginAccount, maintainenceMarginRate: BigNumber=decimal2BN("0.05")) => {
   let liquidationPrice: BigNumber;
   if (marginAccount.SIDE === Side.LONG) {
-    liquidationPrice = (marginAccount.CASH_BALANCE.sub(marginAccount.ENTRY_VALUE)).div((maintainenceMarginRate.sub(constants.One)).mul(marginAccount.SIZE))
+    // liquidationPrice = (marginAccount.CASH_BALANCE.sub(marginAccount.ENTRY_VALUE)).div(decimalMul(maintainenceMarginRate.sub(ONE), marginAccount.SIZE))
+    const nominator = marginAccount.CASH_BALANCE.sub(marginAccount.ENTRY_VALUE)
+    const denom = decimalMul(maintainenceMarginRate.sub(ONE), marginAccount.SIZE)
+    liquidationPrice = decimalDiv(nominator, denom);
     return liquidationPrice
   }
   if (marginAccount.SIDE === Side.SHORT) {
-    liquidationPrice = (marginAccount.CASH_BALANCE.add(marginAccount.ENTRY_VALUE)).div((maintainenceMarginRate.add(constants.One)).mul(marginAccount.SIZE))
+    const nominator = marginAccount.CASH_BALANCE.add(marginAccount.ENTRY_VALUE)
+    const denom = decimalMul(maintainenceMarginRate.add(ONE), marginAccount.SIZE)
+    liquidationPrice = decimalDiv(nominator, denom);
     return liquidationPrice
   }
   return constants.MaxUint256

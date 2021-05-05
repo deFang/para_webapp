@@ -1,9 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-
 import Container from '../Container'
 import Logo from '../Logo'
-
 import PositionButton from './components/PositionButton'
 import TxButton from './components/TxButton'
 import ClaimTestBUSD from "./components/ClaimTestBUSD";

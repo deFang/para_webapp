@@ -1,12 +1,12 @@
 import React, {useMemo} from 'react';
 import styled from 'styled-components';
 
-import { useWallet } from 'use-wallet';
+import {useWallet} from 'use-wallet';
 
 import useModal from '../../../hooks/useModal';
 
 import Button from '../../Button';
-import { getAddress } from '@ethersproject/address'
+import {getAddress} from '@ethersproject/address'
 import {useAllTransactions} from "../../../state/transactions/hooks";
 import PositionModal from "./PositionModal";
 
@@ -26,11 +26,12 @@ function shortenAddress(address: string, chars = 4): string {
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
-interface AccountButtonProps {}
+interface AccountButtonProps {
+}
 
 const PositionButton: React.FC<AccountButtonProps> = (props) => {
-  
-  const { account, connect } = useWallet()
+
+  const {account, connect} = useWallet()
   const allTransactions = useAllTransactions();
 
   const pendingTransactions = useMemo(
@@ -39,7 +40,7 @@ const PositionButton: React.FC<AccountButtonProps> = (props) => {
   );
 
   const [onPresentTransactionModal, onDismissTransactionModal] = useModal(
-    <PositionModal onDismiss={() => onDismissTransactionModal()} />,
+    <PositionModal onDismiss={() => onDismissTransactionModal()}/>,
   );
 
   return (

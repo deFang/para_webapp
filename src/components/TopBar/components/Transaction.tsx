@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CheckCircle, Triangle } from 'react-feather';
+import {CheckCircle, Triangle} from 'react-feather';
 
 import MiniLoader from '../../MiniLoader';
-import { TransactionDetails } from '../../../state/transactions/reducer';
+import {TransactionDetails} from '../../../state/transactions/reducer';
 import config from '../../../config';
-import { RowFixed } from '../../Row';
+import {RowFixed} from '../../Row';
 
 const TransactionWrapper = styled.div`
   display: flex;

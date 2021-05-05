@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useWallet } from 'use-wallet';
+import {useWallet} from 'use-wallet';
 import Button from "../../../components/Button";
 import AccountModal from "./AccountModal";
 import useModal from "../../../hooks/useModal";

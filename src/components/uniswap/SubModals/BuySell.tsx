@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {RowBetween} from '../Row'
 import {Text} from 'rebass'
 import styled from 'styled-components'
@@ -20,6 +20,9 @@ import useModal from "../../../hooks/useModal";
 import ConfirmModal from "../../Confirm/components/ConfirmModal";
 import Spacer from "../../Spacer";
 import {decimalStr} from "../../../utils/formatBalance";
+import useMarginAccount from "../../../hooks/useMarginAccount";
+import {BigNumber} from "ethers";
+import {Side} from "../../../utils/Types";
 
 const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
@@ -108,9 +111,10 @@ export default function BuySell(
   const userAddedTokens: string[] = ["ETH", "FEI"]
   const spotPrice = useSpotPrice();
   const indexPrice = useIndexPrice();
+  const marginAccount = useMarginAccount()
 
-  const [contractSize, setContractSize] = useState('0')
-  const [collateralAmount, setCollateralAmount] = useState('0')
+  const [contractSize, setContractSize] = useState('')
+  const [collateralAmount, setCollateralAmount] = useState('')
 
 
   const handleInputCollateralAmount = useCallback(
@@ -122,7 +126,7 @@ export default function BuySell(
       }
       return collateralAmount
     },
-    [collateralAmount]
+    [collateralAmount, spotPrice]
   )
 
   const handleInputContractSize = useCallback(
@@ -132,10 +136,12 @@ export default function BuySell(
         const contractBN = decimal2BN(contractSize)
         setCollateralAmount(BN2display(decimalMul(contractBN, spotPrice)))
       }
+
       return contractSize
     },
-    [contractSize]
+    [contractSize, spotPrice]
   )
+
 
   const availableMarginBalance = useAvailableMarginBalance()
   const handleOnMaxContractSize = useCallback(
@@ -177,6 +183,25 @@ export default function BuySell(
       );
     }, [para, contractSize]);
 
+
+  const handleMarketClose = useCallback(
+    () => {
+      const size = marginAccount.SIZE
+      const side = marginAccount.SIDE
+      if (side == Side.LONG) {
+        setShowBuy(false)
+        setContractSize(BN2display(size, 18))
+      } else if (side == Side.SHORT) {
+        setShowBuy(true)
+        setContractSize(BN2display(size, 18))
+      } else {
+        setContractSize("0")
+      }
+      if (spotPrice) {
+        setCollateralAmount(BN2display(decimalMul(size, spotPrice)))
+      }
+    }, [para, marginAccount]);
+
   const [onPresentSellConfirmModal, onDismissSellConfirmModal] = useModal(
     <ConfirmModal onDismiss={() => onDismissSellConfirmModal()} onConfirm={handleSell} isBuy={false}
                   contractSize={contractSize}/>,
@@ -202,7 +227,7 @@ export default function BuySell(
             </RowBetween>
           </PaddedColumn>
           <Separator/>
-          <PaddedColumn style={{paddingBottom: 0}}>
+          <PaddedColumn>
             <ToggleWrapper>
               <ToggleOption onClick={() => setShowBuy(!showBuy)} active={showBuy}>
                 BUY/LONG
@@ -212,15 +237,11 @@ export default function BuySell(
               </ToggleOption>
             </ToggleWrapper>
           </PaddedColumn>
-
-
+          <Separator/>
           <Column style={{width: '100%', flex: '1 1'}}>
-            <PaddedColumn gap="14px">
-            </PaddedColumn>
-            <Separator/>
             <PaddedColumn gap="lg">
-              <PricePanel showHeaderLabel={true} id={'PlaceOrder-Price'} showCurrency={true}
-                          currencyName={'ETHER'}/>
+              <PricePanel showHeaderLabel={true} id={'PlaceOrder-Price'} showCurrency={false}
+                          currencyName={'BUSD'}/>
             </PaddedColumn>
             <PaddedColumn gap="lg">
               <CurrencyInputPanel
@@ -230,24 +251,28 @@ export default function BuySell(
                 showMaxButton={true}
                 label={'Contract Size'}
                 id="buysell-size"
+                showCurrency={true}
+                currencyName={'BTC'}
               />
               <CurrencyInputPanel
                 value={collateralAmount}
                 onUserInput={handleInputCollateralAmount}
                 onMax={handleOnMaxCollateral}
                 showMaxButton={false}
-                label={'Value'}
+                label={'Est. Value'}
                 id="buysell-collateral"
+                showCurrency={true}
+                currencyName={'BUSD'}
               />
             </PaddedColumn>
           </Column>
           <SubWrapper>
             {showBuy
               ? (<ButtonCornered text="BUY/LONG" variant="secondary" onClick={() => onPresentBuyConfirmModal()}
-                                 disabled={Number(contractSize)<=0}/>)
+                                 disabled={Number(contractSize) <= 0}/>)
               : (
                 <ButtonCornered text="SELL/SHORT" variant="secondary" onClick={() => onPresentSellConfirmModal()}
-                                disabled={Number(contractSize)<=0}/>)
+                                disabled={Number(contractSize) <= 0}/>)
             }
             {/*<ButtonCornered text="SELL/SHORT" variant="secondary" onClick={() => {}}/>*/}
           </SubWrapper>
@@ -257,7 +282,7 @@ export default function BuySell(
         <FooterWrapper>
           <PaddedColumn>
             <BottomSection gap="12px">
-              <UserInfoBulletin/>
+              <UserInfoBulletin showMarketClose={true} handleMarketClose={handleMarketClose}/>
               <Spacer/>
               <PoolInfoBulletin/>
             </BottomSection>

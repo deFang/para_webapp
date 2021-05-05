@@ -1,10 +1,7 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ThemeProvider from './theme'
 import MainProvider from './views/MainProvider'
 import LayoutView from "./layout";
-
-
 
 
 const App: React.FC = () => {

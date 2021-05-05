@@ -3,7 +3,8 @@ import {BigNumber, Contract, ethers} from 'ethers';
 // import { ERC20 } from "../deployment/ABI/ERC20.json";
 import ERC20 from '../para/ERC20';
 import {
-  AdminAddress, LpTokenAddress,
+  AdminAddress,
+  LpTokenAddress,
   NaiveOracleAddress,
   ParaAddress,
   ParaPlaceAddress,
@@ -12,7 +13,6 @@ import {
 } from "../deployment/const";
 import config from '../config';
 import {web3ProviderFrom} from './ether-utils';
-import {decimalStr} from "../utils/formatBalance";
 import {NaiveOracle as NaiveOracleABI} from "../deployment/ABI/NaiveOracle.json";
 import {Para as ParaABI} from "../deployment/ABI/Para.json";
 import {ParaPlace as ParaPlaceABI} from "../deployment/ABI/ParaPlace.json";
@@ -170,29 +170,24 @@ export class Para {
   }
 
 
-  async traderDeposit(amountStr: string): Promise<any> {
+  async traderDeposit(amount: BigNumber): Promise<any> {
     const {ParaInstance} = this.contracts;
-    const amount = decimalStr(amountStr);
-    console.log("amount", amount, 'signer', this.signer);
-    await ParaInstance.collateralTraderTransferIn(this.myAccount, amount);
+    return await ParaInstance.collateralTraderTransferIn(this.myAccount, amount);
   }
 
-  async traderWithdraw(amountStr: string): Promise<any> {
+  async traderWithdraw(amount: BigNumber): Promise<any> {
     const {ParaInstance} = this.contracts;
-    const amount = decimalStr(amountStr);
-    await ParaInstance.collateralTraderTransferOut(this.myAccount, amount)
+    return await ParaInstance.collateralTraderTransferOut(this.myAccount, amount)
   }
 
-  async lpAdd(amountStr: string): Promise<any> {
+  async lpAdd(amount: BigNumber): Promise<any> {
     const {ParaInstance} = this.contracts;
-    const amount = decimalStr(amountStr);
-    await ParaInstance.depositCollateral(amount);
+    return await ParaInstance.depositCollateral(amount);
   }
 
-  async lpRemove(amountStr: string): Promise<any> {
+  async lpRemove(amount: BigNumber): Promise<any> {
     const {ParaInstance} = this.contracts;
-    const amount = decimalStr(amountStr);
-    await ParaInstance.withdrawCollateral(amount);
+    return await ParaInstance.withdrawCollateral(amount);
   }
 
   async getMarginAccount(): Promise<MarginAccount> {
@@ -202,7 +197,6 @@ export class Para {
 
   async getPoolMarginAccount(): Promise<any> {
     const {ParaInstance} = this.contracts;
-    console.log("poolAccount", await ParaInstance._MARGIN_ACCOUNT_(ParaAddress))
     return await ParaInstance._MARGIN_ACCOUNT_(ParaAddress);
   }
 
@@ -277,6 +271,11 @@ export class Para {
   async querySellBaseToken(amount: BigNumber): Promise<any> {
     const {PricingInstance} = this.contracts;
     return await PricingInstance.querySellBaseToken(amount)
+  }
+
+  async _poolNetPositionRatio(): Promise<any> {
+    const {PricingInstance} = this.contracts;
+    return await PricingInstance._poolNetPositionRatio();
   }
 
 

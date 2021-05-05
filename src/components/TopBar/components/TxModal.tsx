@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react';
-import Modal, { ModalProps } from '../../Modal';
+import React, {useMemo} from 'react';
+import Modal, {ModalProps} from '../../Modal';
 import Label from '../../Label';
 import Button from '../../Button';
-import { TransactionDetails } from '../../../state/transactions/reducer';
+import {TransactionDetails} from '../../../state/transactions/reducer';
 import styled from 'styled-components';
 import Transaction from './Transaction';
 import ModalActions from '../../ModalActions';
 import Spacer from '../../Spacer';
-import { isTransactionRecent, useAllTransactions, useClearAllTransactions } from '../../../state/transactions/hooks';
-import { Trash } from 'react-feather';
+import {isTransactionRecent, useAllTransactions, useClearAllTransactions} from '../../../state/transactions/hooks';
+import {Trash} from 'react-feather';
 
 const MAX_TRANSACTION_HISTORY = 10;
 

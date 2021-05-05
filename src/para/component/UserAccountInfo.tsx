@@ -9,14 +9,8 @@ import useIndexPrice from "../../hooks/useIndexPrice";
 import config from "../../config";
 import usePara from "../../hooks/usePara";
 import {BigNumber} from "ethers";
+import Button from "../../components/Button";
 
-
-const StyledModalTitle = styled.div`
-  color: ${props => props.theme.color.grey[300]};
-  flex: 1;
-  font-size: 18px;
-  font-weight: 700;
-`;
 
 const RowInner = styled.div`
   margin-top: 4px;
@@ -50,7 +44,15 @@ const InfoText: React.FC<InfoTextProps> = (
   )
 }
 
-export default function UserAccountInfo() {
+interface MarketCloseProps {
+  showMarketClose?: boolean;
+  handleMarketClose?: () => void;
+}
+
+const UserAccountInfo: React.FC<MarketCloseProps> = ({
+                                                       showMarketClose,
+                                                       handleMarketClose
+                                                     }) => {
   const theme = useContext(ThemeContext)
   const para = usePara()
   const marginAccount = useMarginAccount()
@@ -77,6 +79,7 @@ export default function UserAccountInfo() {
     []
   );
 
+
   return (
     <>
       <RowBetween>
@@ -91,12 +94,28 @@ export default function UserAccountInfo() {
 
       <RowBetween>
         <InfoText text={"Position Size"}/>
-        <InfoText text={marginAccount ? BN2display(marginAccount.SIZE) : '-'}/>
+        <RowFixed>
+          <RowInner>
+            <TYPE.black fontSize={14} fontWeight={500} color={"#C3C5CB"}>
+              {marginAccount ? BN2display(marginAccount.SIZE) : '-'}
+            </TYPE.black>
+          </RowInner>
+          {showMarketClose && marginAccount && !marginAccount.SIZE.isZero() &&
+          <Button
+            onClick={handleMarketClose}
+            size="sm"
+            text="Market Close"
+            variant="secondary"
+            disabled={false}
+          />
+          }
+        </RowFixed>
       </RowBetween>
 
       <RowBetween>
         <InfoText text={"Avg. Entry Price"}/>
-        <InfoText text={marginAccount && !marginAccount.SIZE.isZero() ? BN2display(decimalDiv(marginAccount.ENTRY_VALUE, marginAccount.SIZE)) : '-'}/>
+        <InfoText
+          text={marginAccount && !marginAccount.SIZE.isZero() ? BN2display(decimalDiv(marginAccount.ENTRY_VALUE, marginAccount.SIZE)) : '-'}/>
       </RowBetween>
 
       <RowBetween>
@@ -121,9 +140,12 @@ export default function UserAccountInfo() {
 
       <RowBetween>
         <InfoText text={"Liquidation Price"}/>
-        <InfoText text={marginAccount && marginAccount.SIDE !== Side.FLAT ? BN2display(getLiquidationPrice(marginAccount, maintenanceMarginRateBN)): "-"}/>
+        <InfoText
+          text={marginAccount && marginAccount.SIDE !== Side.FLAT ? BN2display(getLiquidationPrice(marginAccount, maintenanceMarginRateBN)) : "-"}/>
       </RowBetween>
 
     </>
   );
 }
+
+export default UserAccountInfo;

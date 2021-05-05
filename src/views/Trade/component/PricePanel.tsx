@@ -1,5 +1,4 @@
-import React, {useMemo} from 'react';
-import {getDisplayBalance} from "../../../utils/formatBalance";
+import React from 'react';
 import CurrencyInputPanel from "../../../components/uniswap/CurrencyInputPanel";
 import useSpotPrice from "../../../hooks/useSpotPrice";
 import useIndexPrice from "../../../hooks/useIndexPrice";
@@ -29,7 +28,6 @@ const PricePanel: React.FC<PricePanelProps> = (
 
   const spotPrice = useSpotPrice();
   const indexPrice = useIndexPrice();
-
   const headerLabel = showHeaderLabel? `Index Price: ${(indexPrice ? BN2display(indexPrice!) : "-")}` : undefined;
 
   return (

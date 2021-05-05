@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Button from "../../../components/Button";
-import Modal, { ModalProps } from '../../../components/Modal';
+import Modal, {ModalProps} from '../../../components/Modal';
 import ModalTitle from '../../../components/ModalTitle';
 import TokenInput from "../../../components/TokenInput";
 import usePara from "../../../hooks/usePara";

@@ -49,55 +49,10 @@ const FooterWrapper = styled.div`
 `
 
 
-const ToggleWrapper = styled(RowBetween)`
-  background-color: ${({theme}) => theme.color.bg3};
-  border-radius: 12px;
-  padding: 0px;
-`
-
-const ToggleOption = styled.div<{ active?: boolean }>`
-  width: 50%;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  font-weight: 600;
-  background-color: ${({theme, active}) => (active ? theme.color.primary1 : theme.color.bg3)};
-  color: ${({theme, active}) => (active ? theme.color.text1 : theme.color.text2)};
-  user-select: none;
-`
-
-const SubWrapper = styled.div`
-  width: 100%;
-  height: 100%
-  position: relative;
-  padding-bottom: 60px;
-`
-
 const Section = styled(AutoColumn)`
   padding: 24px;
 `
 
-const BottomSection = styled(Section)`
-  
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-`
-
-
-const Footer = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  border-radius: 20px;
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
-  border-top: 1px solid ${({theme}) => theme.color.bg3};
-  background-color: ${({theme}) => theme.color.bg3};
-  padding: 20px;
-  text-align: left;
-`
 
 export default function SelectContract(
   {
@@ -108,7 +63,6 @@ export default function SelectContract(
   // toggle between tokens and lists
   const {chainId} = useWallet()
   const {selectedToken, setSelectedToken} = useContext(PopupContext)
-  const [showLists, setShowLists] = useState(true)
   const userAddedTokens: string[] = ["BTC", "ETH"]
 
   const handleSelect = useCallback((token: string) => {

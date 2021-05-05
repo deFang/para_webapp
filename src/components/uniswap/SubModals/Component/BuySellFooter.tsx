@@ -1,13 +1,11 @@
-import { Trade, TradeType } from '@uniswap/sdk'
-import React, { useContext, useMemo, useState } from 'react'
-import { ThemeContext } from 'styled-components'
-import styled, { css } from 'styled-components'
-import { Repeat } from 'react-feather'
-import { Text } from 'rebass'
-import { TYPE } from '../../../../theme'
-import { AutoColumn } from '../../Column'
+import React, {useContext, useState} from 'react'
+import styled, {ThemeContext} from 'styled-components'
+import {Repeat} from 'react-feather'
+import {Text} from 'rebass'
+import {TYPE} from '../../../../theme'
+import {AutoColumn} from '../../Column'
 import QuestionHelper from '../../QuestionHelper'
-import { AutoRow, RowBetween, RowFixed } from '../../Row'
+import {RowBetween, RowFixed} from '../../Row'
 import Spacer from "../../../Spacer";
 
 

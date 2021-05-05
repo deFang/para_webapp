@@ -18,7 +18,7 @@ export default function PoolInfoBulletin() {
         {'Pool Balance'}
       </StyledModalTitle>
       <Spacer size="md"/>
-      <PoolAccountInfo />
+      <PoolAccountInfo/>
     </AutoColumn>
   )
 }

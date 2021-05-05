@@ -1,5 +1,4 @@
-import React, { createContext, useCallback, useState } from 'react'
-import styled from 'styled-components'
+import React, {createContext, useCallback, useState} from 'react'
 
 export enum Tokens {
   BTC,

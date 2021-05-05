@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
-import { TransactionResponse } from '@ethersproject/providers';
-import { useTransactionAdder } from '../state/transactions/hooks';
-import { useAddPopup } from '../state/application/hooks';
+import {useCallback} from 'react';
+import {TransactionResponse} from '@ethersproject/providers';
+import {useTransactionAdder} from '../state/transactions/hooks';
+import {useAddPopup} from '../state/application/hooks';
 import {useWallet} from "use-wallet";
 
 function useHandleTransactionReceipt(): (
@@ -9,14 +9,13 @@ function useHandleTransactionReceipt(): (
   summary: string,
 ) => void {
   const { chainId, account } = useWallet();
-  console.log("account in useHandleTransactionReceipt", account)
   const addTransaction = useTransactionAdder();
   const addPopup = useAddPopup();
 
   return useCallback(
     (promise: Promise<TransactionResponse>, summary: string) => {
       promise
-        .then((tx) => {addTransaction(tx, { summary }); console.log('summa', summary); console.log('tx',tx)})
+        .then((tx) => {addTransaction(tx, { summary });})
         .catch((err) => {
           if (err.message.includes('User denied')) {
             // User denied transaction signature on MetaMask.

@@ -7,17 +7,12 @@ import Column, {AutoColumn} from "../Column";
 import {Separator} from "../SearchModal/styleds";
 import ButtonCornered from "../../ButtonCornered";
 import CurrencyInputPanel from "../CurrencyInputPanel";
-import useSpotPrice from "../../../hooks/useSpotPrice";
-import useIndexPrice from "../../../hooks/useIndexPrice";
 import usePara from "../../../hooks/usePara";
-import PricePanel from "../../../views/Trade/component/PricePanel";
 import useAvailableMarginBalance from "../../../hooks/useAvailableMarginBalance";
 import UserInfoBulletin from "./Component/UserInfoBulletin";
 import PoolInfoBulletin from "./Component/PoolInfoBulletin";
-import {BN2display, decimal2BN, decimalDiv, decimalMul} from "../../../utils/Converter";
+import {BN2display, decimal2BN} from "../../../utils/Converter";
 import useHandleTransactionReceipt from "../../../hooks/useHandleTransactionReceipt";
-import useModal from "../../../hooks/useModal";
-import ConfirmModal from "../../Confirm/components/ConfirmModal";
 import Spacer from "../../Spacer";
 import useTestUSDTBalance from "../../../hooks/useTestUSDTBalance";
 import {TYPE} from "../../../theme";
@@ -114,17 +109,23 @@ export default function DepositWithdraw(
   )
 
 
+  const handleTransactionReceipt = useHandleTransactionReceipt();
+
   const handleDeposit = useCallback(
-    async () => {
-      await para?.traderDeposit(collateralVal);
-    }, [collateralVal]
-  )
+    () => {
+      handleTransactionReceipt(
+        para.traderDeposit(decimal2BN(collateralVal)),
+        `Deposit ${collateralVal} BUSD`,
+      );
+    }, [para, collateralVal]);
 
   const handleWithdraw = useCallback(
-    async () => {
-      await para?.traderWithdraw(collateralVal);
-    }, [collateralVal]
-  )
+    () => {
+      handleTransactionReceipt(
+        para.traderWithdraw(decimal2BN(collateralVal)),
+        `Withdraw ${collateralVal} BUSD`,
+      );
+    }, [para, collateralVal]);
 
   const handleOnMaxDeposit = useCallback(
     () => {
@@ -158,7 +159,7 @@ export default function DepositWithdraw(
             </RowBetween>
           </PaddedColumn>
           <Separator/>
-          <PaddedColumn style={{paddingBottom: 0}}>
+          <PaddedColumn>
             <ToggleWrapper>
               <ToggleOption onClick={() => setShowDeposit(!showDeposit)} active={showDeposit}>
                 DEPOSIT
@@ -168,13 +169,8 @@ export default function DepositWithdraw(
               </ToggleOption>
             </ToggleWrapper>
           </PaddedColumn>
-
-
+          <Separator/>
           <Column style={{width: '100%', flex: '1 1'}}>
-            <PaddedColumn gap="14px">
-            </PaddedColumn>
-            <Separator/>
-
             <PaddedColumn gap="lg">
               {
                 showDeposit ? (
@@ -186,6 +182,8 @@ export default function DepositWithdraw(
                     label={'Amount'}
                     headerLabel={`Wallet Balance: ${BN2display(testUSDTBalance)}`}
                     id="deposit-collateral"
+                    showCurrency={true}
+                    currencyName={'BUSD'}
                   />
                 ) : (
                   <CurrencyInputPanel
@@ -196,6 +194,8 @@ export default function DepositWithdraw(
                     label={'Amount'}
                     headerLabel={`Wallet Balance: ${BN2display(testUSDTBalance)}`}
                     id="withdraw-collateral"
+                    showCurrency={true}
+                    currencyName={'BUSD'}
                   />
                 )
               }

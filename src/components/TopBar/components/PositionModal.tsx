@@ -1,21 +1,11 @@
-import React, {useContext, useMemo} from 'react';
+import React, {useContext} from 'react';
 import Modal, {ModalProps} from '../../Modal';
-import Label from '../../Label';
 import Button from '../../Button';
-import {TransactionDetails} from '../../../state/transactions/reducer';
-import styled, {ThemeContext, useTheme} from 'styled-components';
-import Transaction from './Transaction';
-import ModalActions from '../../ModalActions';
-import Spacer from '../../Spacer';
-import {isTransactionRecent, useAllTransactions, useClearAllTransactions} from '../../../state/transactions/hooks';
-import {Trash} from 'react-feather';
-import {Text, TextProps} from 'rebass'
+import styled, {ThemeContext} from 'styled-components';
+import {TextProps} from 'rebass'
 import {TextWrapper, TYPE} from "../../../theme";
-import {getDisplayBalance} from "../../../utils/formatBalance";
 import QuestionHelper from "../../uniswap/QuestionHelper";
 import CurrencyLogo from "../../uniswap/CurrencyLogo";
-import ButtonCornered from "../../ButtonCornered";
-import {ApprovalState} from "../../../hooks/useApprove";
 
 const MAX_TRANSACTION_HISTORY = 10;
 

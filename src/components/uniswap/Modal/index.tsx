@@ -45,17 +45,20 @@ const StyledDialogContent = styled(({minHeight, maxHeight, singleCol, mobile, is
 
     min-height: ${({minHeight}) => `${minHeight}vh`};
     max-height: ${({maxHeight}) => `${maxHeight}vh`};
+
     
-      
-    width: ${({mobile, singleCol}) =>
-      mobile && singleCol
-        ? "50vw"
-        : mobile
-        ? "80vw"
-        : singleCol
-          ? "50vw"
-          : "80vw"
+    max-width: ${({mobile, singleCol}) =>
+      mobile || singleCol
+        ? "600px"
+        : "1200px"
     };
+    min-width: ${({mobile, singleCol}) =>
+      mobile || singleCol
+        ? "400px"
+        : "800px"
+    };
+    
+     
    
     display: flex;
     border: 0px;

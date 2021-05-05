@@ -3,7 +3,6 @@ import styled, {ThemeContext} from 'styled-components'
 import {TYPE} from '../../theme'
 import {RowBetween, RowFixed} from '../../components/Row'
 import {BN2display} from "../../utils/Converter";
-import useIndexPrice from "../../hooks/useIndexPrice";
 import config from "../../config";
 import usePara from "../../hooks/usePara";
 import usePoolMarginAccount from "../../hooks/usePoolMarginAccount";
@@ -52,11 +51,7 @@ const InfoText: React.FC<InfoTextProps> = (
 export default function PoolAccountInfo() {
   const para = usePara()
   const poolAccount = usePoolMarginAccount()
-  console.log('poolAccount', poolAccount)
   const markPrice = useMarkPrice()
-
-  const [balanceMargin, setBalanceMargin] = useState("-")
-  const [availableMargin, setAvailableMargin] = useState("-")
 
   const [initialMarginRate, setInitialMarginRate] = useState("-")
   const [maintenanceMarginRate, setMaintenanceMarginRate] = useState("-")
@@ -64,6 +59,8 @@ export default function PoolAccountInfo() {
   const [LPFee, setLPFee] = useState("-")
   const [MTFee, setMTFee] = useState("-")
   const [fee, setFee] = useState("-")
+
+  const [ENP, setENP] = useState("-")
 
 
   useEffect(() => {
@@ -75,9 +72,6 @@ export default function PoolAccountInfo() {
   }, [para?.isUnlocked]);
 
   const updateOnchain = useCallback(async () => {
-      setBalanceMargin(BN2display(await para.balanceMargin()))
-      setAvailableMargin(BN2display(await para.availableMargin()))
-
       setInitialMarginRate(BN2display(await para.getInitialMarginRate()))
       setMaintenanceMarginRate(BN2display(await para.getMaintenanceMarginRate()))
 
@@ -87,6 +81,7 @@ export default function PoolAccountInfo() {
       setLPFee(BN2display(LPFeeBN))
       setMTFee(BN2display(MTFeeBN))
       setFee(BN2display(FeeBN))
+      setENP(BN2display(await para._poolNetPositionRatio()))
     },
     []
   );
@@ -106,9 +101,11 @@ export default function PoolAccountInfo() {
       <RowBetween>
         <InfoText text={"Pool Liquidity"}/>
         <InfoText text={poolAccount ? `${BN2display(poolAccount.CASH_BALANCE)} BUSD` : '-'}/>
-        <InfoText text={poolAccount ? `entry_value ${BN2display(poolAccount.ENTRY_VALUE)}` : '-'}/>
-        <InfoText text={poolAccount ? `size ${BN2display(poolAccount.SIZE)}` : '-'}/>
-        <InfoText text={poolAccount ? `side ${poolAccount.SIDE}` : '-'}/>
+      </RowBetween>
+
+      <RowBetween>
+        <InfoText text={"Pool ENP"}/>
+        <InfoText text={poolAccount ? ENP : '-'}/>
       </RowBetween>
 
       <RowBetween>

@@ -204,7 +204,7 @@ const Trade: React.FC = () => {
           />
         </Modal>
         <Modal isOpen={buyOpen || sellOpen} onDismiss={() => {
-        }} maxHeight={100} minHeight={50}>
+        }} maxHeight={80} minHeight={50}>
           <BuySell
             onDismiss={handleDismissBuySell}
             buyOpen={buyOpen}

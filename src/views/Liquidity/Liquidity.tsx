@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import styled from 'styled-components';
 import {useWallet} from 'use-wallet';
 import Page from '../../components/Page';
@@ -12,9 +12,9 @@ import SelectContract from "../../components/uniswap/SubModals/SelectContract";
 import Modal from "../../components/uniswap/Modal";
 import usePara from "../../hooks/usePara";
 import useApprove, {ApprovalState} from "../../hooks/useApprove";
-import {TestUSDTAddress, ParaAddress} from "../../deployment/const";
-import BuySellFooter from "../../components/uniswap/SubModals/Component/BuySellFooter";
+import {ParaAddress} from "../../deployment/const";
 import LiquidityAddRemove from "../../components/uniswap/SubModals/LiquidityAddRemove";
+import PricePanel from "../Trade/component/PricePanel";
 
 const FooterWrapper = styled.div`
   width: 100%;
@@ -59,44 +59,44 @@ const Liquidity: React.FC = () => {
     const [approveStatus, approve] = useApprove(para?.TestUSDT, ParaAddress);
 
     return (
-    <>
-      {
-        approveStatus !== ApprovalState.APPROVED ? (
-          <StyledModalAction>
-            <Button
-              onClick={approve}
-              size="lg"
-              text="Approve TestUSDT"
-              variant="secondary"
-              disabled={approveStatus === ApprovalState.PENDING}
-            />
-          </StyledModalAction>
-        ) : (
-          <Wrapper>
+      <>
+        {
+          approveStatus !== ApprovalState.APPROVED ? (
             <StyledModalAction>
               <Button
+                onClick={approve}
                 size="lg"
-                text="ADD LP"
-                onClick={() => {
-                  setAddOpen(true)
-                }}
-                variant="default"
+                text="Approve TestUSDT"
+                variant="secondary"
+                disabled={approveStatus === ApprovalState.PENDING}
               />
             </StyledModalAction>
-            <StyledModalAction>
-              <Button
-                size="lg"
-                text="REMOVE LP"
-                onClick={() => {
-                  setRemoveOpen(true)
-                }}
-                variant="tertiary"
-              />
-            </StyledModalAction>
-          </Wrapper>
-        )
-      }
-    </>
+          ) : (
+            <Wrapper>
+              <StyledModalAction>
+                <Button
+                  size="lg"
+                  text="ADD LP"
+                  onClick={() => {
+                    setAddOpen(true)
+                  }}
+                  variant="default"
+                />
+              </StyledModalAction>
+              <StyledModalAction>
+                <Button
+                  size="lg"
+                  text="REMOVE LP"
+                  onClick={() => {
+                    setRemoveOpen(true)
+                  }}
+                  variant="tertiary"
+                />
+              </StyledModalAction>
+            </Wrapper>
+          )
+        }
+      </>
     )
   }
 
@@ -114,7 +114,7 @@ const Liquidity: React.FC = () => {
               variant="secondary"
             />
           </StyledModalAction>
-        ) : (<ApproveSector />)
+        ) : (<ApproveSector/>)
         }
       </>
     )
@@ -131,32 +131,33 @@ const Liquidity: React.FC = () => {
             }}
           >
             <Row>
-              <CurrencyLogo name={"ETHER"}/>
+              <CurrencyLogo name={"BTC"}/>
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                {"BTC/USDT"}
+                {"BTC/BUSD"}
               </Text>
             </Row>
           </ButtonDropdownLight>
           <Spacer size="md"/>
-          <FooterWrapper>
-            <BuySellFooter
-              trade={true}
-            />
-          </FooterWrapper>
+
+          <Wrapper>
+            <PricePanel showHeaderLabel={false} id={'Main-Price'} showCurrency={false} currencyName={'BTC'}/>
+          </Wrapper>
+
           <Spacer size="md"/>
           <Wrapper>
             <DepositModal/>
           </Wrapper>
 
 
-          <Modal isOpen={showSearch} onDismiss={handleSearchDismiss} maxHeight={80} minHeight={10}>
+          <Modal isOpen={showSearch} onDismiss={handleSearchDismiss} maxHeight={80} minHeight={50} singleCol={true}>
             <SelectContract
               onDismiss={handleSearchDismiss}
             />
           </Modal>
 
 
-          <Modal isOpen={ addOpen || removeOpen } onDismiss={() => {}} maxHeight={80} minHeight={10}>
+          <Modal isOpen={addOpen || removeOpen} onDismiss={() => {
+          }} maxHeight={80} minHeight={50} singleCol={true}>
             <LiquidityAddRemove
               onDismiss={handleDismissAddRemove}
               addOpen={addOpen}
@@ -173,15 +174,11 @@ const Liquidity: React.FC = () => {
 };
 
 
-
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
 `;
-
-
 
 
 const StyledModalAction = styled.div`
