@@ -50,7 +50,6 @@ export class Para {
   contracts: { [name: string]: Contract };
   TestUSDT: ERC20Mintable;
   LpToken: ERC20;
-  ethereum = window.ethereum;
 
   constructor(cfg: Configuration) {
     const provider = getDefaultProvider();
@@ -74,12 +73,6 @@ export class Para {
    * @param account An address of unlocked wallet account.
    */
   unlockWallet(provider: any, account: string, chainId: any) {
-    // const ethersProvider = new ethers.providers.Web3Provider(this.ethereum, "any");
-    // this.signer = ethersProvider.getSigner();
-    // this.TestUSDT = new ethers.Contract(TestUSDTAddress, ERC20, this.signer);
-    // // this.TestUSDT.connect(this.signer);
-    // this.myAccount = account;
-
     const newProvider = new ethers.providers.Web3Provider(provider, chainId);
     this.signer = newProvider.getSigner();
     this.myAccount = account;

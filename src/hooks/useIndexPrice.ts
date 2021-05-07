@@ -9,7 +9,9 @@ const useIndexPrice = () => {
   const para = usePara();
 
   const fetchPrice = useCallback(async () => {
+    if (para && para.isUnlocked) {
       setPrice(await para.getIndexPrice());
+    }
   }, [para]);
 
   useEffect(() => {

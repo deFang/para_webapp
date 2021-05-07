@@ -19,16 +19,16 @@ const useMarginAccount = () => {
   const fetchBalance = useCallback(async () => {
     const {SIDE, SIZE, ENTRY_VALUE, CASH_BALANCE, ENTRY_SLOSS} = await para.getMarginAccount();
     setMarginAccount({SIDE, SIZE, ENTRY_VALUE, CASH_BALANCE, ENTRY_SLOSS});
-  }, [para?.isUnlocked]);
+  }, [para, setMarginAccount]);
 
   useEffect(() => {
-    if (para?.isUnlocked) {
+    if (para && para?.isUnlocked) {
       fetchBalance().catch(err => console.error(err.stack));
 
       const refreshBalance = setInterval(fetchBalance, config.refreshInterval);
       return () => clearInterval(refreshBalance);
     }
-  }, [para?.isUnlocked, setMarginAccount]);
+  }, [para]);
 
   return marginAccount;
 };

@@ -15,28 +15,14 @@ import Modal from "../../components/uniswap/Modal";
 import usePara from "../../hooks/usePara";
 import useApprove, {ApprovalState} from "../../hooks/useApprove";
 import {ParaAddress} from "../../deployment/const";
-import Para from "../../para"
 import PricePanel from "./component/PricePanel";
 
-interface DepositProps {
-  para: Para;
-}
+
 
 
 const Trade: React.FC = () => {
-  const onConfirm = () => {
-    return
-  };
-  const onDismiss = () => {
-    return
-  };
 
 
-  const handleConfirm = useCallback(() => {
-    onConfirm();
-    // onDismiss();
-  }, [onConfirm, onDismiss]);
-  const handleDismiss = useCallback(() => onDismiss(), [onDismiss]);
 
 
   const [showSearch, setShowSearch] = useState<boolean>(false);
@@ -44,7 +30,7 @@ const Trade: React.FC = () => {
     setShowSearch(false)
   }, [setShowSearch])
 
-  const {account, connect, status, error, chainId} = useWallet()
+  const {account, connect, chainId} = useWallet()
   const para = usePara()
 
 
@@ -203,6 +189,7 @@ const Trade: React.FC = () => {
             onDismiss={handleSearchDismiss}
           />
         </Modal>
+
         <Modal isOpen={buyOpen || sellOpen} onDismiss={() => {
         }} maxHeight={80} minHeight={50}>
           <BuySell
@@ -210,6 +197,7 @@ const Trade: React.FC = () => {
             buyOpen={buyOpen}
           />
         </Modal>
+
         <Modal isOpen={depositOpen || withdrawOpen} onDismiss={() => {
         }} maxHeight={80} minHeight={50}>
           <DepositWithdraw
@@ -225,7 +213,6 @@ const Trade: React.FC = () => {
 };
 
 
-const StyledPage = styled.div``
 
 
 const Wrapper = styled.div`
@@ -258,38 +245,5 @@ const StyledCard = styled.div`
   flex-direction: column;
 `;
 
-const StyledOverview = styled.div`
-  align-items: center;
-  display: flex;
-  @media (max-width: 768px) {
-    width: 100%;
-    flex-flow: column nowrap;
-    align-items: center;
-  }
-`;
-
-const CardWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    flex-flow: column nowrap;
-    align-items: center;
-  }
-`;
-
-const StyledNoticeContainer = styled.div`
-  max-width: 768px;
-  width: 90vw;
-`;
-
-
-const StyledLink = styled.a`
-  font-weight: 700;
-  text-decoration: none;
-  color: ${(props) => props.theme.color.primary.main};
-`;
 
 export default Trade;

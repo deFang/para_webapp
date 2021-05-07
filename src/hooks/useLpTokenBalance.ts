@@ -14,7 +14,7 @@ const useLpTokenBalance = () => {
   }, [para?.isUnlocked]);
 
   useEffect(() => {
-    if (para?.isUnlocked) {
+    if (para && para?.isUnlocked) {
       fetchBalance().catch(err => console.error(err.stack));
 
       const refreshBalance = setInterval(fetchBalance, config.refreshInterval);

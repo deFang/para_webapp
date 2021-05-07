@@ -11,16 +11,15 @@ const useTestUSDTBalance = () => {
   const fetchBalance = useCallback(async () => {
     const balance = await para.getTestUSDTBalance();
     setBalance(balance);
-  }, [para?.isUnlocked]);
+  }, [para, setBalance]);
 
   useEffect(() => {
-    if (para?.isUnlocked) {
+    if (para && para.isUnlocked) {
       fetchBalance().catch(err => console.error(err.stack));
-
       const refreshBalance = setInterval(fetchBalance, config.refreshInterval);
       return () => clearInterval(refreshBalance);
     }
-  }, [para?.isUnlocked, setBalance]);
+  }, [para]);
 
   return balance;
 };

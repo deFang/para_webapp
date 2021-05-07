@@ -58,8 +58,6 @@ const StyledDialogContent = styled(({minHeight, maxHeight, singleCol, mobile, is
         : "800px"
     };
     
-     
-   
     display: flex;
     border: 0px;
     border-radius: 20px;
@@ -104,6 +102,7 @@ export default function Modal({
     }
   })
   console.log('maxHeight', maxHeight, 'minHeight', minHeight)
+  console.log("isMobile", isMobile)
 
   return (
     <>

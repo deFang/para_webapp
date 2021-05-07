@@ -9,12 +9,6 @@ import usePoolMarginAccount from "../../hooks/usePoolMarginAccount";
 import useMarkPrice from "../../hooks/useMarkPrice";
 
 
-const StyledModalTitle = styled.div`
-  color: ${props => props.theme.color.grey[300]};
-  flex: 1;
-  font-size: 18px;
-  font-weight: 700;
-`;
 
 const RowInner = styled.div`
   margin-top: 4px;
@@ -36,7 +30,6 @@ const InfoText: React.FC<InfoTextProps> = (
     color = "#C3C5CB"
   }
 ) => {
-  const theme = useContext(ThemeContext)
   return (
     <RowFixed>
       <RowInner>

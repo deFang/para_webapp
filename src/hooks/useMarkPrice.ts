@@ -10,13 +10,15 @@ const useMarkPrice = () => {
 
   const fetchPrice = useCallback(async () => {
       setPrice(await para.getTwapPrice());
-  }, [para]);
+  }, [para, setPrice]);
 
   useEffect(() => {
+    if (para && para?.isUnlocked) {
       fetchPrice().catch(err => console.error(err.stack));
       const refreshBalance = setInterval(fetchPrice, config.refreshInterval);
       return () => clearInterval(refreshBalance);
-  }, [setPrice, para]);
+    }
+  }, [para]);
 
   return price;
 };

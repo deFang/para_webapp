@@ -39,6 +39,12 @@ const Wrapper = styled.div`
   padding-bottom: 50px;
   max-height: 100%;
   border-radius: 20px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-flow: column nowrap;
+    align-items: center;
+  }
 `
 
 const FooterWrapper = styled.div`
@@ -46,6 +52,9 @@ const FooterWrapper = styled.div`
   position: relative;
   background-color: ${({theme}) => theme.color.bg3};
   border-radius: 20px;
+  @media (max-width: 768px) {
+    margin-bottom: 50px;
+  }
 `
 
 
